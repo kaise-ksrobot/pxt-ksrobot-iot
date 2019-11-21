@@ -1,0 +1,21 @@
+{
+	"KSRobot_IOT|block": "KSRobot_IOT",
+	"KSRobot_IOT.IOT_Config.STATION|block": "STATION",
+	"KSRobot_IOT.IOT_Config.STATION_AP|block": "STATION_AP",
+	"KSRobot_IOT.Wifi_setup|block": "KSRobot WIFI 設定| TXD %txd| RXD %rxd| SSID %ssid| 密碼 %passwd| 模式 %ap",
+	"KSRobot_IOT.Get_IP|block": "取得IP位址",
+	"KSRobot_IOT.AP_Name|block": "取得模組AP名稱",
+	"KSRobot_IOT.Wifi_Connection|block": "WIFI連接狀態",
+	"KSRobot_IOT.ThingSpeak_set|block": "傳送到 ThingSpeak| Write API key = %api_key|  Field 1 = %field1|| Field 2 = %field2| Field 3 = %field3| Field 4 = %field4| Field 5 = %field5| Field 6 = %field6| Field 7 = %field7| Field 8 = %field8",
+	"KSRobot_IOT.IFTTT_set|block": "傳送到 IFTTT| 事件名稱 = %event_name| 存取金鑰 = %api_key| Value 1 = %value1|| Value 2 = %value2| Value 3 = %value3",
+	"KSRobot_IOT.MQTT_set|block": "連接到 MQTT| 伺服器 %host| 埠 %port| ID %clientId| 帳戶 %username| 密碼 %pwd",
+	"KSRobot_IOT.MQTTPublish|block": "發送 MQTT 訊息到 Topic %topic 資料 %payload",
+	"KSRobot_IOT.MQTTSubscribe|block": "MQTT 新增訂閱 Topic %topic",
+	"KSRobot_IOT.MQTT_Data|block": "MQTT 接收到 Topic %receivedata資料",
+	"KSRobot_IOT.HTML_POST|block": "HTML_POST Server %host| Header %header| Body %body",
+	"KSRobot_IOT.TCP_Client|block": "TCP客戶端應用 伺服器位址 %host 埠 %port 傳送資料 %senddata",
+	"KSRobot_IOT.TCP_Server|block": "建立 TCP 伺服端應用 埠 %port",
+	"KSRobot_IOT.TCP_SendData|block": "TCP 傳送資料 %senddata",
+	"KSRobot_IOT.TCP_Close|block": "切斷TCP客戶端連接",
+	"KSRobot_IOT.Receive_Data|block": "IOT模組接收資料"
+}
