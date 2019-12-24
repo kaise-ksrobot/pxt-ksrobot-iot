@@ -14,12 +14,34 @@ namespace KSRobot_IOT {
     let receive_topic_name = ""
     let receive_topic_value = ""
 
+    let MQTT_TOPIC = ["", "", "", "", ""]
+    let MQTT_CB: Action[] = [null, null, null, null, null]
+
+
+    //topics name
+    export enum TOPIC {
+        Topic0 = 0,
+        Topic1 = 1,
+        Topic2 = 2,
+        Topic3 = 3,
+        Topic4 = 4
+    }
+
+    export class NewMessage {
+
+        public message: string;
+    }
+
+    //% shim=KSRobotCPP::forever
+    function forever(a: Action): void {
+        return
+    }
+
     export enum IOT_Config {
         STATION = 0,
         STATION_AP = 1,
 
     }
-
 
 
     function WifiDataReceived(): void {
@@ -35,6 +57,7 @@ namespace KSRobot_IOT {
             let strlen1 = 0
 
             iot_receive_data = serial.readLine()
+            iot_receive_data = iot_receive_data.substr(0, iot_receive_data.length - 1)
 
             if (iot_receive_data.indexOf(compare_str1) >= 0) {
                 // parse mqtt topic
@@ -44,6 +67,16 @@ namespace KSRobot_IOT {
                 strlen4 = iot_receive_data.length - strlen3
                 receive_topic_name = iot_receive_data.substr(strlen1, strlen2)
                 receive_topic_value = iot_receive_data.substr(strlen3, strlen4)
+
+
+                switch (receive_topic_name) {
+                    case MQTT_TOPIC[0]: { if (MQTT_CB[0] != null) forever(MQTT_CB[0]); } break;
+                    case MQTT_TOPIC[1]: { if (MQTT_CB[1] != null) forever(MQTT_CB[1]); } break;
+                    case MQTT_TOPIC[2]: { if (MQTT_CB[2] != null) forever(MQTT_CB[2]); } break;
+                    case MQTT_TOPIC[3]: { if (MQTT_CB[3] != null) forever(MQTT_CB[3]); } break;
+                    case MQTT_TOPIC[4]: { if (MQTT_CB[4] != null) forever(MQTT_CB[4]); } break;
+                }
+
             }
             // parse Local IP
             if (iot_receive_data.indexOf(compare_str2) >= 0) {
@@ -74,9 +107,6 @@ namespace KSRobot_IOT {
 
 
 
-
-
-
         })
 
     }
@@ -89,7 +119,7 @@ namespace KSRobot_IOT {
       */
     //% blockId=Wifi_setup
     //% block="KSRobot WIFI Set| TXD %txd| RXD %rxd| SSID %ssid| PASSWORD %passwd| AP %ap"
-    //% weight=99
+
 
     export function Wifi_setup(txd: SerialPin, rxd: SerialPin, ssid: string, passwd: string, ap: IOT_Config): void {
         serial.redirect(
@@ -106,13 +136,12 @@ namespace KSRobot_IOT {
         serial.writeLine("AT+AP_SET?ssid=" + ssid + "&pwd=" + passwd + "&AP=" + ap + "=");
         for (let id_y = 0; id_y <= 4; id_y++) {
             for (let id_x = 0; id_x <= 4; id_x++) {
-                if(!IOT_WIFI_CONNECTED)
-                {
+                if (!IOT_WIFI_CONNECTED) {
                     led.plot(id_x, id_y)
                     basic.pause(500)
 
                 }
-                
+
             }
         }
 
@@ -187,6 +216,7 @@ namespace KSRobot_IOT {
         if (IOT_WIFI_CONNECTED) {
             serial.writeLine("AT+MQTT?host=" + host + "&port=" + port + "&clientId=" + clientId + "&username=" + username + "&password=" + pwd + "=");
             IOT_MQTT_CONNECTED = true
+            control.waitMicros(800000)
         }
     }
 
@@ -203,6 +233,7 @@ namespace KSRobot_IOT {
     export function MQTTSubscribe(topic: string): void {
         if (IOT_MQTT_CONNECTED) {
             serial.writeLine("AT+MQTT_Subscribe?topic=" + topic + "=");
+            control.waitMicros(800000)
         }
     }
 
@@ -217,7 +248,44 @@ namespace KSRobot_IOT {
             return "";
 
     }
+    
 
+    //% blockId=MQTTPublish1
+    //% block="MQTT publish %top | payload %payload"
+    export function MQTTPublish1(top: TOPIC, payload: string): void {
+        if (IOT_MQTT_CONNECTED) {
+            switch (top) {
+                case TOPIC.Topic0: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[0] + "&payload=" + payload + "="); break;
+                case TOPIC.Topic1: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[1] + "&payload=" + payload + "="); break;
+                case TOPIC.Topic2: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[2] + "&payload=" + payload + "="); break;
+                case TOPIC.Topic3: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[3] + "&payload=" + payload + "="); break;
+                case TOPIC.Topic4: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[4] + "&payload=" + payload + "="); break;
+            }
+        }
+    }
+
+    //% blockId=MQTTSubscribe1
+    //% block="MQTT subscribe  %top | %topic"
+    export function MQTTSubscribe1(top: TOPIC, topic: string): void {
+        if (IOT_MQTT_CONNECTED) {
+            MQTT_TOPIC[top] = topic
+            serial.writeLine("AT+MQTT_Subscribe?topic=" + topic + "=");
+            control.waitMicros(800000)
+        }
+
+    }
+
+    //% blockId=MQTT_Data1 
+    //% block="On %top |received"
+    export function MQTT_Data1(top: TOPIC, cb: (message: string) => void) {
+        switch (top) {
+            case TOPIC.Topic0: MQTT_CB[0] = () => { cb(receive_topic_value) }; break;
+            case TOPIC.Topic1: MQTT_CB[1] = () => { cb(receive_topic_value) }; break;
+            case TOPIC.Topic2: MQTT_CB[2] = () => { cb(receive_topic_value) }; break;
+            case TOPIC.Topic3: MQTT_CB[3] = () => { cb(receive_topic_value) }; break;
+            case TOPIC.Topic4: MQTT_CB[4] = () => { cb(receive_topic_value) }; break;
+        }
+    }
 
     //% blockId=HTML_POST
     //% block="HTML_POST Server %host| Header %header| Body %body"
@@ -272,14 +340,13 @@ namespace KSRobot_IOT {
         }
     }
 
-
-
     //% blockId=Receive_Data
     //% block="Receive Data"
     export function Receive_Data(): string {
 
         return iot_receive_data;
     }
+
 
 
 }
