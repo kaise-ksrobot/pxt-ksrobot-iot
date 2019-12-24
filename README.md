@@ -8,7 +8,8 @@ Extension for KSRobot_IOT\
 ![image](images/block.png)
 
 ## Code Example 
-![image](images/iot.png)
+KAISE  KSRobot WIFI IOT Module for micro-bit\
+[http://iot.kaise.com.tw](http://iot.kaise.com.tw)\
 
 ## License
 
