@@ -8,6 +8,7 @@ Extension for KSRobot_IOT\
 ![image](images/block.png)
 
 ## Code Example 
+![image](images/iot.png)
 
 ## License
 
