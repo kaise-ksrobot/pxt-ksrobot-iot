@@ -216,7 +216,7 @@ namespace KSRobot_IOT {
         if (IOT_WIFI_CONNECTED) {
             serial.writeLine("AT+MQTT?host=" + host + "&port=" + port + "&clientId=" + clientId + "&username=" + username + "&password=" + pwd + "=");
             IOT_MQTT_CONNECTED = true
-            control.waitMicros(800000)
+            control.waitMicros(500000)
         }
     }
 
@@ -232,8 +232,8 @@ namespace KSRobot_IOT {
     //% block="MQTT subscribe topic %topic"
     export function MQTTSubscribe(topic: string): void {
         if (IOT_MQTT_CONNECTED) {
-            serial.writeLine("AT+MQTT_Subscribe?topic=" + topic + "=");
             control.waitMicros(800000)
+            serial.writeLine("AT+MQTT_Subscribe?topic=" + topic + "=");
         }
     }
 
@@ -268,9 +268,10 @@ namespace KSRobot_IOT {
     //% block="MQTT subscribe  %top | %topic"
     export function MQTTSubscribe1(top: TOPIC, topic: string): void {
         if (IOT_MQTT_CONNECTED) {
+            control.waitMicros(800000)
             MQTT_TOPIC[top] = topic
             serial.writeLine("AT+MQTT_Subscribe?topic=" + topic + "=");
-            control.waitMicros(800000)
+            
         }
 
     }
