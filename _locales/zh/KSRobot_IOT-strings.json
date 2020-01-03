@@ -5,6 +5,7 @@
 	"KSRobot_IOT.Wifi_setup|block": "KSRobot WIFI 設定| TXD %txd| RXD %rxd| SSID %ssid| 密碼 %passwd| 模式 %ap",
 	"KSRobot_IOT.Get_IP|block": "取得IP位址",
 	"KSRobot_IOT.AP_Name|block": "取得模組AP名稱",
+	"KSRobot_IOT.Get_Version|block": "取得模組版本",
 	"KSRobot_IOT.Wifi_Connection|block": "WIFI連接狀態",
 	"KSRobot_IOT.ThingSpeak_set|block": "傳送到 ThingSpeak| Write API key = %api_key|  Field 1 = %field1|| Field 2 = %field2| Field 3 = %field3| Field 4 = %field4| Field 5 = %field5| Field 6 = %field6| Field 7 = %field7| Field 8 = %field8",
 	"KSRobot_IOT.IFTTT_set|block": "傳送到 IFTTT| 事件名稱 = %event_name| 存取金鑰 = %api_key| Value 1 = %value1|| Value 2 = %value2| Value 3 = %value3",
