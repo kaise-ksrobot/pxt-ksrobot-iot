@@ -128,6 +128,7 @@ namespace KSRobot_IOT {
       * @param rxd micro:bit to Iot module ; eg: SerialPin.P8
       */
     //% blockId=Wifi_setup
+    //% weight=100
     //% block="KSRobot WIFI Set| TXD %txd| RXD %rxd| SSID %ssid| PASSWORD %passwd| AP %ap"
 
 
@@ -155,34 +156,39 @@ namespace KSRobot_IOT {
 
             }
         }
-        
+
 
     }
 
     //% blockId=Get_IP
+    //% weight=90
     //% block="Get Local IP"
     export function Get_IP(): string {
         return local_ip;
     }
     //% blockId=AP_Name
+    //% weight=89
     //% block="IOT AP Name"
     export function AP_Name(): string {
         return ap_ip;
     }
 
     //% blockId=Get_Version
+    //% weight=87
     //% block="Get Version"
     export function Get_Version(): string {
         return Version;
     }
 
     //% blockId=Wifi_Connection
+    //% weight=86
     //% block="Wifi Connection"
     export function Wifi_Connection(): boolean {
         return IOT_WIFI_CONNECTED;
     }
 
     //% blockId=ThingSpeak_set 
+    //% weight=80
     //% expandableArgumentMode"toggle" inlineInputMode=inline
     //% block="ThingSpeak Set| Write API key = %api_key| Field 1 = %field1|| Field 2 = %field2| Field 3 = %field3| Field 4 = %field4| Field 5 = %field5| Field 6 = %field6| Field 7 = %field7| Field 8 = %field8"
     export function ThingSpeak_set(api_key: string, field1: number, field2?: number, field3?: number, field4?: number, field5?: number, field6?: number, field7?: number, field8?: number): void {
@@ -210,6 +216,7 @@ namespace KSRobot_IOT {
     }
 
     //% blockId=IFTTT_set
+    //% weight=75
     //% expandableArgumentMode"toggle" inlineInputMode=inline
     //% block="IFTTT Set| Event Name = %event_name| Write API key = %api_key| Value 1 = %value1|| Value 2 = %value2| Value 3 = %value3"
     export function IFTTT_set(event_name: string, api_key: string, value1: string, value2?: string, value3?: string): void {
@@ -229,6 +236,7 @@ namespace KSRobot_IOT {
     }
 
     //% blockId=MQTT_set
+    //% weight=70
     //% block="Connect MQTT| server %host| port %port| client id %clientId| username %username| password %pwd"
     export function MQTT_set(host: string, port: number, clientId: string, username: string, pwd: string): void {
         if (IOT_WIFI_CONNECTED) {
@@ -239,24 +247,28 @@ namespace KSRobot_IOT {
     }
 
     //%blockId=MQTTPublish
+    //% weight=69
     //% block="MQTT publish topic %topic payload %payload"
     export function MQTTPublish(topic: string, payload: string): void {
         if (IOT_MQTT_CONNECTED) {
-            serial.writeLine("AT+MQTT_Publish?topic=" + topic + "&payload=" + payload );
+            serial.writeString("AT+MQTT_Publish?topic=" + topic + "&payload=" + payload + "=" + "\r\n");
+
         }
     }
 
     //%blockId=MQTTSubscribe
+    //% weight=68
     //% block="MQTT subscribe topic %topic"
     export function MQTTSubscribe(topic: string): void {
         if (IOT_MQTT_CONNECTED) {
             control.waitMicros(600000)
             serial.writeLine("AT+MQTT_Subscribe?topic=" + topic + "=");
-            
+
         }
     }
 
     //% blockId=MQTT_Data
+    //% weight=67
     //% block="MQTT Topic %receivedata"
     export function MQTT_Data(receivedata: string): string {
 
@@ -267,36 +279,39 @@ namespace KSRobot_IOT {
             return "";
 
     }
-    
+
 
     //% blockId=MQTTPublish1
+    //% weight=66
     //% block="MQTT publish %top | payload %payload"
     export function MQTTPublish1(top: TOPIC, payload: string): void {
         if (IOT_MQTT_CONNECTED) {
             switch (top) {
-                case TOPIC.Topic0: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[0] + "&payload=" + payload ); break;
-                case TOPIC.Topic1: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[1] + "&payload=" + payload ); break;
-                case TOPIC.Topic2: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[2] + "&payload=" + payload ); break;
-                case TOPIC.Topic3: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[3] + "&payload=" + payload ); break;
-                case TOPIC.Topic4: serial.writeLine("AT+MQTT_Publish?topic=" + MQTT_TOPIC[4] + "&payload=" + payload ); break;
+                case TOPIC.Topic0: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[0] + "&payload=" + payload + "=" + "\r\n");break;
+                case TOPIC.Topic1: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[1] + "&payload=" + payload + "=" + "\r\n");break;
+                case TOPIC.Topic2: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[2] + "&payload=" + payload + "=" + "\r\n");break;
+                case TOPIC.Topic3: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[3] + "&payload=" + payload + "=" + "\r\n");break;
+                case TOPIC.Topic4: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[4] + "&payload=" + payload + "=" + "\r\n");break;
             }
         }
     }
 
     //% blockId=MQTTSubscribe1
+    //% weight=65
     //% block="MQTT subscribe  %top | %topic"
     export function MQTTSubscribe1(top: TOPIC, topic: string): void {
         if (IOT_MQTT_CONNECTED) {
             control.waitMicros(600000)
             MQTT_TOPIC[top] = topic
             serial.writeLine("AT+MQTT_Subscribe?topic=" + topic + "=");
-            
-            
+
+
         }
 
     }
 
     //% blockId=MQTT_Data1 
+    //% weight=64
     //% block="On %top |received"
     export function MQTT_Data1(top: TOPIC, cb: (message: string) => void) {
         switch (top) {
@@ -309,32 +324,38 @@ namespace KSRobot_IOT {
     }
 
     //% blockId=HTML_POST
+    //% weight=60
     //% block="HTML_POST Server %host| Header %header| Body %body"
     export function HTML_POST(host: string, header: string, body: string): void {
         if (IOT_WIFI_CONNECTED) {
-            serial.writeLine("AT+HTML_POST?host="
+            serial.writeString("AT+HTML_POST?host="
                 + host
                 + "&header="
                 + header
                 + "&senddata="
-                + body);
+                + body
+                + "=" + "\r\n");
+                
         }
     }
 
     //% blockId=TCP_Client
+    //% weight=59
     //% block="TCP_Client Server %host Port %port Send Data %senddata"
     export function TCP_Client(host: string, port: number, senddata: string): void {
         if (IOT_WIFI_CONNECTED) {
-            serial.writeLine("AT+TCP_Client?host="
+            serial.writeString("AT+TCP_Client?host="
                 + host
                 + "&port="
                 + port
                 + "&senddata="
-                + senddata);
+                + senddata
+                + "=" + "\r\n");
         }
     }
 
     //% blockId=TCP_Server
+    //% weight=58
     //% block="TCP_Server Port %port"
     export function TCP_Server(port: number): void {
         if (IOT_WIFI_CONNECTED) {
@@ -345,15 +366,18 @@ namespace KSRobot_IOT {
     }
 
     //% blockId=TCP_SendData
+    //% weight=57
     //% block="TCP Send Data %senddata"
     export function TCP_SendData(senddata: string): void {
         if (IOT_WIFI_CONNECTED) {
-            serial.writeLine("AT+TCP_SendData?senddata="
-                + senddata);
+            serial.writeString("AT+TCP_SendData?senddata="
+                + senddata
+                + "=" + "\r\n");
         }
     }
 
     //% blockId=TCP_Close
+    //% weight=56
     //% block="TCP_Client Close Connection"
     export function TCP_Close(): void {
         if (IOT_WIFI_CONNECTED) {
@@ -362,6 +386,7 @@ namespace KSRobot_IOT {
     }
 
     //% blockId=Receive_Data
+    //% weight=50
     //% block="Receive Data"
     export function Receive_Data(): string {
 
