@@ -1,6 +1,13 @@
 /**
  * KSRobot_IOT V0.010
  */
+
+declare namespace KSRobotCPP {
+    //% shim=KSRobotCPP::mb_version
+    function mb_version(): int32;
+
+}
+
 //% weight=10 color=#00A6F0 icon="\uf1eb" block="KSRobot_IOT"
 
 namespace KSRobot_IOT {
@@ -37,6 +44,8 @@ namespace KSRobot_IOT {
     function forever(a: Action): void {
         return
     }
+
+    
 
     export enum IOT_Config {
         STATION = 0,
@@ -133,18 +142,32 @@ namespace KSRobot_IOT {
 
 
     export function Wifi_setup(txd: SerialPin, rxd: SerialPin, ssid: string, passwd: string, ap: IOT_Config): void {
+        pins.setPull(DigitalPin.P8, PinPullMode.PullUp)
+        control.waitMicros(500000)
+
         serial.redirect(
             txd,   //TX
             rxd,  //RX
             BaudRate.BaudRate115200
         );
+        let wait_time = 0;
+
         serial.setRxBufferSize(128)
         serial.setTxBufferSize(128)
         control.waitMicros(500000)
         WifiDataReceived()
         control.waitMicros(200000)
-        serial.writeLine("AT+Restart=");
-        control.waitMicros(1300000)
+
+        if (KSRobotCPP.mb_version()) {
+            serial.writeLine("AT+Restart=");
+            control.waitMicros(1300000)
+        }
+
+
+
+        pins.setPull(DigitalPin.P8, PinPullMode.PullNone)
+
+
         serial.writeLine("AT+AP_SET?ssid=" + ssid + "&pwd=" + passwd + "&AP=" + ap + "=");
         for (let id_y = 0; id_y <= 4; id_y++) {
             for (let id_x = 0; id_x <= 4; id_x++) {
@@ -287,11 +310,11 @@ namespace KSRobot_IOT {
     export function MQTTPublish1(top: TOPIC, payload: string): void {
         if (IOT_MQTT_CONNECTED) {
             switch (top) {
-                case TOPIC.Topic0: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[0] + "&payload=" + payload + "=" + "\r\n");break;
-                case TOPIC.Topic1: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[1] + "&payload=" + payload + "=" + "\r\n");break;
-                case TOPIC.Topic2: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[2] + "&payload=" + payload + "=" + "\r\n");break;
-                case TOPIC.Topic3: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[3] + "&payload=" + payload + "=" + "\r\n");break;
-                case TOPIC.Topic4: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[4] + "&payload=" + payload + "=" + "\r\n");break;
+                case TOPIC.Topic0: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[0] + "&payload=" + payload + "=" + "\r\n"); break;
+                case TOPIC.Topic1: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[1] + "&payload=" + payload + "=" + "\r\n"); break;
+                case TOPIC.Topic2: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[2] + "&payload=" + payload + "=" + "\r\n"); break;
+                case TOPIC.Topic3: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[3] + "&payload=" + payload + "=" + "\r\n"); break;
+                case TOPIC.Topic4: serial.writeString("AT+MQTT_Publish?topic=" + MQTT_TOPIC[4] + "&payload=" + payload + "=" + "\r\n"); break;
             }
         }
     }
@@ -335,7 +358,7 @@ namespace KSRobot_IOT {
                 + "&senddata="
                 + body
                 + "=" + "\r\n");
-                
+
         }
     }
 
