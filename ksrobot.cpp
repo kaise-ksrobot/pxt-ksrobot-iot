@@ -1,8 +1,10 @@
 #include "pxt.h"
-using namespace pxt;
-namespace KSRobotCPP
-{
 
+using namespace pxt;
+
+//% weight=10 color=#00A6F0 icon="\uf085"
+namespace kslib
+{
     //%
     void forever_stub(void *a)
     {
@@ -22,14 +24,15 @@ namespace KSRobotCPP
             //createThread((void *)thr, 400, 20, forever_stub, (void *)a);
         }
     }
+
     //%
     int mb_version()
     {
 #if MICROBIT_CODAL
         return 0;
-#endif
-
+#else
         return 1;
+#endif
     }
 
-} // namespace KSRobotCPP
+} // namespace kslib
